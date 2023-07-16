@@ -133,3 +133,34 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
     handle_error(response, "Adding address objects to FG")
     print("Objects added!")
     return 
+
+
+def main():
+    url = input("Enter fortigate url\n")
+    vdom = input("Enter VDOM\n")
+    token = input("Enter token\n")
+
+    fw_info = {
+        "url": url,
+        "vdom": vdom,
+        "token": token
+    }
+
+    counter_of_ip_addresses = int(input("Enter number of IP addresses\n"))
+    ip_addresses = []
+    for i in range(counter_of_ip_addresses):
+        ip_addresses.append(input())
+
+    IPs = []
+    for ip in ip_addresses:
+        if ip.__contains__("/"):
+            print("Enter IP without mask. Example: 8.8.8.8")
+            return -1
+        is_ip_address_valid(ip)
+        ip = ip + '/32'
+        IPs.append(ip)
+
+    add_malicious_IP_objects_to_FG(fw_info, IPs)
+   
+    update_malicious_IP_object_group_in_FG(fw_info, IPs)
+    return
