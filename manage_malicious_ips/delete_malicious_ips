@@ -43,7 +43,7 @@ def handle_error(response , comment):
 # Get malicious_IPs_group from Frotigate, remove the given object from this object_group and update the object_group
 # Output: This function returns nothing
 def update_malicious_IP_group_in_FG(fw_info, ip):
-    fg_url = "https://%s.partdp.ir/api/v2/cmdb/firewall/addrgrp/Malicious_IPs?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
+    fg_url = "https://%s/api/v2/cmdb/firewall/addrgrp/Malicious_IPs?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
     payload={}
 
     headers = {
