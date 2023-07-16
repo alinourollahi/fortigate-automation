@@ -45,3 +45,21 @@ def get_malicious_IP_group_From_FG(fw_info):
         address_list.append(r["name"])   
     
     print(address_list)
+
+
+def main():
+    url = input("Enter fortigate url\n")
+    vdom = input("Enter VDOM\n")
+    token = input("Enter token\n")
+
+    fw_info = {
+        "url": url,
+        "vdom": vdom,
+        "token": token
+    }
+
+    get_malicious_IP_group_From_FG(fw_info)
+    return
+
+if __name__ == "__main__":
+    main()

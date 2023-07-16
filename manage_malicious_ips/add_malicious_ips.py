@@ -164,3 +164,7 @@ def main():
    
     update_malicious_IP_object_group_in_FG(fw_info, IPs)
     return
+
+
+if __name__ == "__main__":
+    main()
