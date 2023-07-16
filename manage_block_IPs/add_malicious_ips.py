@@ -40,6 +40,46 @@ def handle_error(response , comment):
 ##############################################
 
 
+# Updating malicious_IP object_group
+# Note that you must create an object_group on your firewall with this name before running this script
+# Output: this function returns nothing
+def update_malicious_IP_object_group_in_FG(fw_info, names):
+    fg_url = "https://%s/api/v2/cmdb/firewall/addrgrp/Malicious_IPs?with_meta=1&datasource=1&skip=1&vdom=%s"  %(fw_info['url'] ,fw_info['vdom'])
+
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting Malicious_IPs group_object from FG")
+    address = response.json()
+
+    address = address["results"][0]
+    members = address['member']
+    
+    for name in names:
+        c = True
+        for member in members:
+            if member["name"] == name:
+                c = False
+                break
+        if c:
+            member = {
+                "name": name
+            }
+            members.append(member)
+    payload = {
+        "member":members
+    }
+
+    payload = json.dumps(payload)
+
+    response = requests.request("put", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Updating Malicious_IPs object_group")
+    print("Object_Group Malicious IPs Updated!")
+
 
 # Post objects to Fortigate
 # This function posts one or more objects to Fortigate
@@ -53,6 +93,7 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
         'Authorization': 'Bearer '+ fw_info["token"]  
     }
 
+    ### Getting address objects from FG
     response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Getting address objects from FG")
 
@@ -77,15 +118,17 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
 
     if(len(new_names) ==0):
         return
-    fg_url = "https://fg-%s.partdp.ir/api/v2/cmdb/firewall/address?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['site'] ,fw_info['vdom'])
+    
+    fg_url = "https://%s/api/v2/cmdb/firewall/address?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
     headers = {
         'Authorization': 'Bearer '+ fw_info["token"]   
     }
+
     payload = "["
     for name in new_names:
-        payload+='{"name":"%s","subnet":"%s"},' % (name, name)
-        
+        payload+='{"name":"%s","subnet":"%s"},' % (name, name)   
     payload += ']'
+
     response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Adding address objects to FG")
     print("Objects added!")
