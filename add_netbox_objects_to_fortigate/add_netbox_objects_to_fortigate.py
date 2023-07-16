@@ -139,6 +139,19 @@ def update_FG_object(FG_VM_name, fw_info, name):
     handle_error(response, "Updating Object's name in Fortigate")
 
 
+# Delete an object from Fortigate
+# This function is called by 'compare_netbox_to_FG' function
+def delete_FG_object(FG_VM_name, fw_info):
+    fg_url = "https://%s/api/v2/cmdb/firewall/address/%s?vdom=%s" %(fw_info["url"],FG_VM_name, fw_info["vdom"])
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"]
+    }
+    payload='{"name":"%s"}' % (FG_VM_name)
+    print("Deleting: " + FG_VM_name)
+    response = requests.request("DELETE", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Deleting an object from Fortigate")
+
+
 # Compare the output of the 'get_VMs_from_netbox' and 'get_addresses_from_FG' functions
 # If name of an object from Fortigate and netbox does not match, this function calls 'update_FG_object' function
 # If an object from Fortigate does not exist on netbox and that object has zero refrence, this function calls 'delete_FG_object' function.
