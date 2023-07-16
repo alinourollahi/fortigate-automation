@@ -1,17 +1,31 @@
 # fortigate-automation
 
-This repo focuses on automating repetitive tasks on Fortigate firewalls.  
-Each directory on this repository contains scripts for different goals.
-I tested all of the scripts on FortiOS 7+.
+This repository focuses on automating repetitive tasks on Fortigate firewalls. Each directory in this repository contains scripts for different goals. All scripts have been tested on FortiOS 7+.
 
-#
+---
 
-### manage_malicious_IPs
-**"malicious IPs"** are IPs that you want to block on your Fortigate firewall. with the scripts of this folder, you can manager the malicious IPs on your Fortigate firewall.  
+## Directory: manage_malicious_IPs
 
-Prerequisites: You need to do two things before running the scripts in this folder.  
-1- You must create an object_group with the name "Malicious_IPs".  
-2- You must create a deny policy in your Fortigate firewall. (policy should be something like this: source_interface: any, destination_interface: any, source: Malicious_IPs, destination: all, action: deny)
+The **manage_malicious_IPs** directory contains scripts to manage malicious IPs on your Fortigate firewall.
 
-There are 3 scripts in this folder for managing Malicious IPs on your Fortigate firewall. "add_malicious_ips.py" for adding malicious IPs, "delete_malicious_ips" for deleting malicious IPs and "get_Malicious_IPs" for getting malicious IPs from your Fortigate firewall.
+### Prerequisites
 
+Before running the scripts in this directory, make sure to complete the following steps:
+
+1. Create an object group named **Malicious_IPs**.
+2. Create a deny policy in your Fortigate firewall with the following settings: (this is recommended setting but you can adjust it to your situation)
+   - Source interface: any
+   - Destination interface: any
+   - Source: Malicious_IPs
+   - Destination: all
+   - Action: deny
+
+### Scripts
+
+1. **add_malicious_ips.py**: Adds malicious IPs to your Fortigate firewall.
+2. **delete_malicious_ips.py**: Deletes malicious IPs from your Fortigate firewall.
+3. **get_Malicious_IPs.py**: Retrieves malicious IPs from your Fortigate firewall.
+
+---
+
+If you have any questions about this repo, you can reach me at alinourollahi777@gmail.com
