@@ -28,4 +28,4 @@ Before running the scripts in this directory, make sure to complete the followin
 
 ---
 
-If you have any questions about this repo, you can reach me at alinourollahi777@gmail.com
+If you have any questions about this repo, feel free to reach me at alinourollahi777@gmail.com
