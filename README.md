@@ -4,8 +4,9 @@ This repo focuses on automating repetitive tasks on Fortigate firewalls.
 Each directory on this repository contains scripts for different goals.
 I tested all of the scripts on FortiOS 7+.
 
-### manage_block_IPs
+#
 
+### manage_block_IPs
 Prerequisites: You need to do two things before running the scripts in this folder.  
 1- You must create an object_group with the name "Malicious_IPs".  
 2- You must create a deny policy in your Fortigate firewall. (policy should be something like this: source: Malicious_IPs, destination: all, action: deny)
