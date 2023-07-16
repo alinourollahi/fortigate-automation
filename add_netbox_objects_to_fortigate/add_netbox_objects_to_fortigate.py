@@ -84,9 +84,6 @@ def get_VMs_from_netbox(netbox_url, netbox_token):
     return netbox_VMs
 
 
-
-
-
 # Get VMs list from Fortigate
 # Only VMs in the range of 192.168.0.0/16, If your VMs are in different range, you need to change this part.
 # Output: An array with name, IP and ref_count of each VM (FG_VMs)
@@ -127,3 +124,36 @@ def get_addresses_from_FG(fw_info):
             fg_VMs.append(VM)
     
     return fg_VMs
+
+# Compare the output of the 'get_VMs_from_netbox' and 'get_addresses_from_FG' functions
+# If name of an object from Fortigate and netbox does not match, this function calls 'update_FG_object' function
+# If an object from Fortigate does not exist on netbox and that object has zero refrence, this function calls 'delete_FG_object' function.
+# If an object from netbox does not exist on Fortigate, this function calls 'add_FG_object' function.
+# Output: an array with name, IP and ref_count of VMs from Fortigate which does not exist on netbox and have ref_count greater than zero (Old_VMs)
+def compare_netbox_to_FG(netbox_VMs, FG_VMs, fw_info):
+    print("netbox_VMs:" , len(netbox_VMs))
+    print("FG_VMs:" ,len(FG_VMs))
+    
+    old_VMs = []
+
+    for FG_VM in FG_VMs:
+        res = next((sub for sub in netbox_VMs if sub['ip'] == FG_VM["ip"]), None)
+
+        if res is not None:
+            netbox_VMs.remove(res)
+            name = res['name'].split('.psg.network')[0] + '-local'
+            
+            if name != FG_VM['name']:
+                update_FG_object(FG_VM['name'], fw_info, name)
+        else:
+            if(FG_VM['ref']!=0):
+                old_VMs.append(FG_VM)
+            else:
+                print(FG_VM)
+                delete_FG_object(FG_VM['name'], fw_info)
+
+    for netbox_VM in netbox_VMs:
+        name = netbox_VM['name'].split('.psg.network')[0] + '-local'
+        add_FG_object(name, fw_info, netbox_VM['ip'])
+
+    return old_VMs
