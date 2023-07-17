@@ -25,7 +25,7 @@ Before running the scripts in this directory, make sure to complete the followin
 
 1. **add_malicious_ips.py**: Adds malicious IPs to your Fortigate firewall.
 2. **delete_malicious_ips.py**: Deletes malicious IPs from your Fortigate firewall.
-3. **get_Malicious_IPs.py**: Retrieves malicious IPs from your Fortigate firewall.
+3. **get_Malicious_ips.py**: Retrieves malicious IPs from your Fortigate firewall.
 
 ---
 
