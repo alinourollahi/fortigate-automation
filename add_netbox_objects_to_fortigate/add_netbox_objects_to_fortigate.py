@@ -197,3 +197,28 @@ def compare_netbox_to_FG(netbox_VMs, FG_VMs, fw_info):
         add_FG_object(name, fw_info, netbox_VM['ip'])
 
     return old_VMs
+
+
+def main():
+    url = input("Enter fortigate url\n")
+    vdom = input("Enter VDOM\n")
+    token = input("Enter FG token\n")
+
+    fw_info = {
+        "url": url,
+        "vdom": vdom,
+        "token": token
+    }
+
+    netbox_token = input("Enter netbox token\n")
+    netbox_url = input("Enter netbox url")
+    netbox_VMs = get_VMs_from_netbox(netbox_url, netbox_token)
+
+    FG_VMs = get_addresses_from_FG(fw_info)
+
+    old_VMs = compare_netbox_to_FG(netbox_VMs, FG_VMs, fw_info)
+    print("Number of old VMs: " + str(len(old_VMs)))
+    print(old_VMs)
+                
+if __name__ == "__main__":
+    main()
