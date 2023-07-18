@@ -31,3 +31,20 @@ def is_ip_address_valid(address):
     except ValueError:
         print("IP address '{}' is not valid!".format(address)) 
         sys.exit(-1)
+
+
+# This function prints the current situation of the VPN PBR.
+def get_PBR_status(site, vdom, token, policy_id):
+    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ token 
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting current PBR status")
+
+    res = response.json()['results'][0]['src']
+    for r in res:
+        print(r['subnet'].split('/')[0])
