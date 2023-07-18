@@ -74,6 +74,6 @@ def add_VM_to_PBR(site, vdom, token, policy_id, vm_ip):
 
     payload = json.dumps(payload)
     response = requests.request("put", fg_url, headers=headers, data=payload, verify=False)
-    handle_error(response, "Updating Shahab PBR")
+    handle_error(response, "Updating the PBR")
     print('IP added to the PBR successfully')
 
