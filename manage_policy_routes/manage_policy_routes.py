@@ -48,3 +48,32 @@ def get_PBR_status(site, vdom, token, policy_id):
     res = response.json()['results'][0]['src']
     for r in res:
         print(r['subnet'].split('/')[0])
+
+
+# This function adds a VM to the Shahab PBR.
+def add_VM_to_PBR(site, vdom, token, policy_id, vm_ip):
+    fg_url = "https://fg-%s.partdp.ir/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ token 
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting current PBR status")
+
+    res = response.json()['results'][0]['src']
+    
+    new_vm = {'subnet': vm_ip + '/255.255.255.255', 'q_origin_key': vm_ip + '/255.255.255.255'}
+
+    res.append(new_vm)
+
+    payload = {
+        "src": res
+    }
+
+    payload = json.dumps(payload)
+    response = requests.request("put", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Updating Shahab PBR")
+    print('IP added to the PBR successfully')
+
