@@ -110,3 +110,26 @@ def del_VM_from_PBR(site, vdom, token, policy_id, vm_ip):
     response = requests.request("put", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Updating the PBR")
     print('IP deleted from the PBR successfully')
+
+
+def main():
+    site = input("Enter site\n")
+    vdom = input("Enter VDOM\n")
+    token = input("Enter FG token\n")
+    policy_id = input("Enter policy_id\n")
+    action = input("Choose your action: add, get, del\n")
+
+    if action == 'get':
+        get_PBR_status(site, vdom, token, policy_id)
+    elif action == 'add':
+        vm_ip = input("Enter the IP\n")
+        is_ip_address_valid(vm_ip)
+        add_VM_to_PBR(site, vdom, token, policy_id, vm_ip)
+    elif action == 'del':
+        vm_ip = input("Enter the IP\n")
+        is_ip_address_valid(vm_ip)
+        del_VM_from_PBR(site, vdom, token, policy_id, vm_ip)
+    else:
+        print("invalid option!")
+if __name__ == "__main__":
+    main()
