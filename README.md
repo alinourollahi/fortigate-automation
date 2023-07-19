@@ -32,7 +32,7 @@ Before running the scripts in this directory, make sure to complete the followin
 ## Directory: add_netbox_objects_to_fortigate
 
 This directory contains a script for adding Netbox VMs to Fortigate.  
-This script assumes that only Netbox objects in the range of `192.168.0.0/16` need to be added to Fortigate. If you want to add all of the VMs in your inventory to Fortigate, just change `192.168.0.0/255.255.0.0` to `0.0.0.0/0.0.0.0`.
+This script assumes that only Netbox objects in the `192.168.0.0/16` range need to be added to Fortigate. If you want to add all of the VMs in your inventory to Fortigate, just change `192.168.0.0/255.255.0.0` to `0.0.0.0/0.0.0.0`.
 
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with write access to address objects
@@ -40,4 +40,15 @@ This script assumes that only Netbox objects in the range of `192.168.0.0/16` ne
 
 ---
 
+## Directory: manage_policy_routes
+
+This directory contains a script for managing a specific policy_route in Fortigate firewalls.
+Let's say that you have a specific policy_route in your Fortigate that is used for granting internet access to VMs. So, if you add a new IP in the source section of this policy_route, the VM with that IP has internet access. In scenarios like this, you can use this script.
+
+### Prerequisites
+1. Create a Fortigate user (REST API Admin) with write access to the network/router.
+2. Create the policy route that you want to manage.
+
+
+---
 If you have any questions about this repo, feel free to reach me at alinourollahi777@gmail.com.
