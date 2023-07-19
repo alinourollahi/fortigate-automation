@@ -34,8 +34,8 @@ def is_ip_address_valid(address):
 
 
 # This function prints the current situation of the VPN PBR.
-def get_PBR_status(site, vdom, token, policy_id):
-    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
+def get_PBR_status(url, vdom, token, policy_id):
+    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(url, policy_id, vdom)
     payload={}
 
     headers = {
@@ -51,8 +51,8 @@ def get_PBR_status(site, vdom, token, policy_id):
 
 
 # This function adds a VM to the the PBR.
-def add_VM_to_PBR(site, vdom, token, policy_id, vm_ip):
-    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
+def add_VM_to_PBR(url, vdom, token, policy_id, vm_ip):
+    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(url, policy_id, vdom)
     payload={}
 
     headers = {
@@ -77,3 +77,36 @@ def add_VM_to_PBR(site, vdom, token, policy_id, vm_ip):
     handle_error(response, "Updating the PBR")
     print('IP added to the PBR successfully')
 
+
+
+
+# This function deletes a VM from the PBR.
+def del_VM_from_PBR(site, vdom, token, policy_id, vm_ip):
+    fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ token 
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting current PBR status")
+
+    res = response.json()['results'][0]['src']
+    
+    new_vm = {'subnet': vm_ip + '/255.255.255.255', 'q_origin_key': vm_ip + '/255.255.255.255'}
+
+    try:
+        res.remove(new_vm)
+    except ValueError:
+        print("IP not found in the list")
+        return
+
+    payload = {
+        "src": res
+    }
+
+    payload = json.dumps(payload)
+    response = requests.request("put", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Updating the PBR")
+    print('IP deleted from the PBR successfully')
