@@ -22,7 +22,6 @@ def handle_error(response , comment):
         sys.exit(-1)
 
 
-
 # This function find ip addresses for each of the members of "VMs" array
 def get_address_of_vms(fw_info, VMs):
 
@@ -105,7 +104,7 @@ def get_zone(fw_info, intf):
 
     payload = {}
     response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
-    handle_error(response, "Getting zone of interface from FG")
+    handle_error(response, "Getting zone of the interface from FG")
 
     zones = response.json()["results"]
 
@@ -118,7 +117,6 @@ def get_zone(fw_info, intf):
     return -1
 
 def main():
-    
     url = input("Enter fortigate url\n")
     vdom = input("Enter VDOM\n")
     token = input("Enter token\n")
@@ -135,7 +133,7 @@ def main():
     if(wan_zone == -1):
         wan_zone = wan_interface
 
-    check_policy(fw_info, wan_interface)
+    check_policy(fw_info, wan_zone)
 
 if __name__ == "__main__":
     main()
