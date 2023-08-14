@@ -63,7 +63,7 @@ This directory contains a script for retrieving a list of all objects with perma
 ---
 ## Directory: create_svi
 
-This directory contains a script for creating a new interface vlan on Fortigate firewalls.
+This directory contains a script for creating a new interface vlan on Fortigate firewalls.  
 This script creates the interface VLAN as well as a corresponding zone.
 
 ### Prerequisites
