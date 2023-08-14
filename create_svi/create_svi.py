@@ -68,10 +68,71 @@ def get_interfaces_from_FG(fw_info):
 
     response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
 
-    handle_error(response, "getting interfaces from FG")
+    handle_error(response, "Getting interfaces from FG")
     interfaces = response.json()['results']
 
     return interfaces
+
+
+# This function sends a Post request to FG to add an interface to FG.
+# It first validates that "name", "VID" or "alias" of the new interface is not overlapped with existing interfaces.
+# Output: This function returns nothing.
+def add_interface_to_FG(fw_info, intf, alias, vid, ip):
+
+    interfaces = get_interfaces_from_FG(fw_info)
+
+    name = "VID-" + vid
+    for interface in interfaces:
+        if interface['name'] == name:
+            print('Duplicate interface name!')
+            sys.exit(-1)
+        elif interface['alias'] == alias:
+            print('Duplicate interface alias!')
+            sys.exit(-1)
+        elif interface['type'] == 'vlan' and interface['vlanid'] == vid:
+            print('Duplicate VlanID!')
+            sys.exit(-1)
+
+    payload = {
+        'interface': intf,
+        'vdom': fw_info['vdom'],
+        'name': name,
+        'alias': alias,
+        'type': 'vlan',
+        'vlanid': int(vid),
+        'ip': ip,
+        'allowaccess': 'ping'
+    }    
+
+    fg_url = "https://%s/api/v2/cmdb/system/interface?vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
+    payload = json.dumps(payload)
+    headers = {
+        'Authorization': 'Bearer '+ fw_info['token']
+    }
+
+    response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Posting an interface to FG")
+
+    print("Interface '{}' added successfully".format(name))
+
+
+# This function sends a Get request to FG to retreive a list of all zones.
+# This function is called by "add_zone_to_FG" function.
+# Output: An array of zones
+def get_zones_from_FG(fw_info):
+    fg_url = "https://%s/api/v2/cmdb/system/zone?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+    
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+
+    payload = {}
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting zones from FG")
+
+    zones = response.json()["results"]
+    
+    return zones
 
 
 
