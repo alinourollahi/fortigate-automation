@@ -43,11 +43,22 @@ This script assumes that only Netbox objects in the `192.168.0.0/16` range need 
 ## Directory: manage_policy_routes
 
 This directory contains a script for managing a specific policy_route in Fortigate firewalls.
-Let's say that you have a specific policy_route in your Fortigate that is used for granting internet access to VMs. So, if you add a new IP in the source section of this policy_route, the VM with that IP has internet access. In scenarios like this, you can use this script.
+Let's say that you have a specific policy_route in your Fortigate that grants internet access to VMs. So, if you add a new IP in the source section of this policy_route, the VM with that IP has internet access. In scenarios like this, you can use this script.
 
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with write access to the network/router.
 2. Create the policy route that you want to manage.
+
+
+---
+
+
+## Directory: check_internet_status
+
+This directory contains a script for retrieving a list of all objects with permanent and unlimited internet access.
+
+### Prerequisites
+1. Create a Fortigate user (REST API Admin) with read access to the firewall/policy and firewall/address.
 
 
 ---
