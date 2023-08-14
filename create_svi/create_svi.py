@@ -135,6 +135,33 @@ def get_zones_from_FG(fw_info):
     return zones
 
 
+# This function sends a Post request to FG to add an interface to FG.
+# It first validates that "name" of the new zone is not overlapped with existing zones.
+# Output: This function returns nothing.
+def add_zone_to_FG(fw_info, name, interface):
+    zones = get_zones_from_FG(fw_info)
+
+    for zone in zones:
+        if zone['name'] == name:
+            print('Duplicate Zone name!')
+            sys.exit(-1)
+
+    members = [{'interface-name': interface, 'q_origin_key': interface}]
+    zone = {
+        'name': name,
+        'interface': members,
+        'intrazone': 'allow'
+    }
+
+    fg_url = "https://%s/api/v2/cmdb/system/zone?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+
+    payload = json.dumps(zone)
+    response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting zones from FG")
+    print("Zone '{}' added successfully.".format(name))
 
 
 def main():
