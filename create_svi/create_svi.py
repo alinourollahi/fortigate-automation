@@ -54,21 +54,43 @@ def is_vid_valid(vid):
 # End of Validation functions
 ##############################################
 
-def main():
-    site = input()
-    vdom = input()
-    token = input()
+# This function sends a GET request to FG to retreive a list of all interfaces (in all VDOMs).
+# This function is called by "add_interface_to_FG" function.
+# Output: An array of all interfaces
+def get_interfaces_from_FG(fw_info):
+    fg_url = "https://%s/api/v2/cmdb/system/interface?vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
 
-    interface = input()
-    alias = input()
-    vid = input()
-    ip = input()
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info['token']
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+
+    handle_error(response, "getting interfaces from FG")
+    interfaces = response.json()['results']
+
+    return interfaces
+
+
+
+
+def main():
+    url = input("Enter fortigate url\n")
+    vdom = input("Enter VDOM\n")
+    token = input("Enter token\n")
+
+    interface = input("Enter fortigate interface\n")
+    alias = input("Enter alias\n")
+    vid = input("Enter VID\n")
+    ip = input("Enter IP\n")
 
     is_vid_valid(vid)
     is_ip_address_valid(ip)
 
     fw_info = {
-        "site": site,
+        "site": url,
         "vdom": vdom,
         "token": token
     }
