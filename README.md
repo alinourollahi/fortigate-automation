@@ -64,7 +64,7 @@ This directory contains a script for retrieving a list of all objects with perma
 ## Directory: create_svi
 
 This directory contains a script for creating a new interface vlan on Fortigate firewalls.
-This script creates an interface vlan and also a zone for that interface with alias name.
+This script creates the interface VLAN as well as a corresponding zone.
 
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with write access to the system/configuration. Ensure a "global" scope is selected for this API user.
