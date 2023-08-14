@@ -178,7 +178,7 @@ def main():
     is_ip_address_valid(ip)
 
     fw_info = {
-        "site": url,
+        "url": url,
         "vdom": vdom,
         "token": token
     }
