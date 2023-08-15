@@ -17,7 +17,7 @@ Before using the script, make sure you have the following prerequisites in place
 
 ## Usage
 
-Execute the one of the scripts with the following command:   
+Execute one of the scripts with the following command:   
 
 ```bash
 python3 add_malicious_ips.py
