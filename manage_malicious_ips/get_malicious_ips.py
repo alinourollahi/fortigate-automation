@@ -1,5 +1,3 @@
-#!/usr/bin/python3 
-
 import ipaddress
 from lib2to3.pgen2 import token
 from os import confstr
