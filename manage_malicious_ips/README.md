@@ -4,8 +4,7 @@ The **manage_malicious_IPs** directory contains scripts to manage malicious IPs 
 
 ### Prerequisites
 
-Before running the scripts in this directory, make sure to complete the following steps:
-
+Before using the script, make sure you have the following prerequisites in place:
 1. Create an object group named **Malicious_IPs**.
 2. Create a deny policy in your Fortigate firewall with the following settings (recommended settings, adjust as needed):
    - Source interface: any
