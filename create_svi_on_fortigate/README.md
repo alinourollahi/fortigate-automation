@@ -1,7 +1,6 @@
 # Create SVI on Fortigate
 
-This directory contains a script for creating a new interface vlan on Fortigate firewalls.  
-This script creates the interface VLAN as well as a corresponding zone.
+This directory contains a script for creating a new interface vlan as well as a corresponding zone on Fortigate firewalls.  
 
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with write access to the system/configuration. Ensure a "global" scope is selected for this API user.
