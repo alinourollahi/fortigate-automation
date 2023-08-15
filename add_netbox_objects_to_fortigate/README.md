@@ -22,6 +22,3 @@ The script will prompt you for the following inputs:
 4. netbox_token: Netbox API token for accessing VM information.
 5. netbox_url: URL of your Netbox instance.
 
-The script will then proceed to add Netbox VMs to your Fortigate firewall.
-
-
