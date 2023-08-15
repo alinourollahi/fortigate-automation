@@ -1,16 +1,8 @@
-# manage_malicious_IPs
+# add_netbox_objects_to_fortigate
 
-The **manage_malicious_IPs** directory contains scripts to manage malicious IPs on your Fortigate firewall.
+This directory contains a script for adding Netbox VMs to Fortigate.  
+This script assumes that only Netbox objects in the `192.168.0.0/16` range need to be added to Fortigate. If you want to add all of the VMs in your inventory to Fortigate, just change `192.168.0.0/255.255.0.0` to `0.0.0.0/0.0.0.0`.
 
 ### Prerequisites
-
-Before running the scripts in this directory, make sure to complete the following steps:
-
-1. Create an object group named **Malicious_IPs**.
-2. Create a deny policy in your Fortigate firewall with the following settings (recommended settings, adjust as needed):
-   - Source interface: any
-   - Destination interface: any
-   - Source: Malicious_IPs
-   - Destination: all
-   - Action: deny
-3. Create a Fortigate user (REST API Admin) with write access to address objects.
+1. Create a Fortigate user (REST API Admin) with write access to address objects
+2. Create a Netbox token with read access to the virtualization section.
