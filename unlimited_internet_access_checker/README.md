@@ -3,6 +3,7 @@
 This directory contains a script for retrieving a list of all objects with permanent and unlimited internet access. 
 
 ## Prerequisites
+Before using the script, make sure you have the following prerequisites in place:
 1. Create a Fortigate user (REST API Admin) with read access to the firewall/policy and firewall/address.
 
 
