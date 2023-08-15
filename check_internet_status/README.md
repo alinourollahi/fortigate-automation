@@ -1,4 +1,4 @@
-# Unlimited Access Checker
+# Unlimited Internet Access Checker
 
 This directory contains a script for retrieving a list of all objects with permanent and unlimited internet access. 
 
