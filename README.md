@@ -60,6 +60,14 @@ This directory contains a script for retrieving a list of all objects with perma
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with read access to the firewall/policy and firewall/address.
 
+---
+## Directory: create_svi
+
+This directory contains a script for creating a new interface vlan on Fortigate firewalls.  
+This script creates the interface VLAN as well as a corresponding zone.
+
+### Prerequisites
+1. Create a Fortigate user (REST API Admin) with write access to the system/configuration. Ensure a "global" scope is selected for this API user.
 
 ---
 If you have any questions about this repo, feel free to reach me at alinourollahi777@gmail.com.
