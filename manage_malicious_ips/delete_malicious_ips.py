@@ -1,5 +1,3 @@
-#!/usr/bin/python3 
-
 from xmlrpc.client import boolean
 import json
 import requests
