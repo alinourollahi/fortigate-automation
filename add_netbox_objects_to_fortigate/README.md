@@ -1,4 +1,4 @@
-## Directory: manage_malicious_IPs
+# manage_malicious_IPs
 
 The **manage_malicious_IPs** directory contains scripts to manage malicious IPs on your Fortigate firewall.
 
