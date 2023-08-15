@@ -11,7 +11,7 @@ This directory contains a script for retrieving a list of all objects with perma
 Execute the script with the following command:   
 
 ```bash
-python3 check_internet_status.py
+python3 unlimited_internet_access_checker.py
 ```
 The script will prompt you for the following inputs:
 1. fortigate_url: URL of your Fortigate device.
