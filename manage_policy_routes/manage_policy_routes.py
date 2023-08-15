@@ -81,7 +81,7 @@ def add_VM_to_PBR(url, vdom, token, policy_id, vm_ip):
 
 
 # This function deletes a VM from the PBR.
-def del_VM_from_PBR(site, vdom, token, policy_id, vm_ip):
+def del_VM_from_PBR(url, vdom, token, policy_id, vm_ip):
     fg_url = "https://%s/api/v2/cmdb/router/policy/%s?vdom=%s" %(site, policy_id, vdom)
     payload={}
 
@@ -113,22 +113,22 @@ def del_VM_from_PBR(site, vdom, token, policy_id, vm_ip):
 
 
 def main():
-    site = input("Enter site\n")
+    url = input("Enter url\n")
     vdom = input("Enter VDOM\n")
     token = input("Enter FG token\n")
     policy_id = input("Enter policy_id\n")
     action = input("Choose your action: add, get, del\n")
 
     if action == 'get':
-        get_PBR_status(site, vdom, token, policy_id)
+        get_PBR_status(url, vdom, token, policy_id)
     elif action == 'add':
         vm_ip = input("Enter the IP\n")
         is_ip_address_valid(vm_ip)
-        add_VM_to_PBR(site, vdom, token, policy_id, vm_ip)
+        add_VM_to_PBR(url, vdom, token, policy_id, vm_ip)
     elif action == 'del':
         vm_ip = input("Enter the IP\n")
         is_ip_address_valid(vm_ip)
-        del_VM_from_PBR(site, vdom, token, policy_id, vm_ip)
+        del_VM_from_PBR(url, vdom, token, policy_id, vm_ip)
     else:
         print("invalid option!")
 if __name__ == "__main__":
