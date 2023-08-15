@@ -6,3 +6,21 @@ This script assumes that only Netbox objects in the `192.168.0.0/16` range need 
 ### Prerequisites
 1. Create a Fortigate user (REST API Admin) with write access to address objects
 2. Create a Netbox token with read access to the virtualization section.
+
+### Usage
+
+Execute the script with the following command:   
+
+```bash
+python3 add_netbox_objects_to_fortigate.py
+```
+The script will prompt you for the following inputs:
+1. fortigate_url: URL of your Fortigate device.
+2. fortigate_vdom: Virtual Domain (VDOM) on Fortigate.
+3. fortigate_token: API token for Fortigate authentication.
+4. netbox_token: Netbox API token for accessing VM information.
+5. netbox_url: URL of your Netbox instance.
+
+The script will then proceed to add Netbox VMs to your Fortigate firewall.
+
+
