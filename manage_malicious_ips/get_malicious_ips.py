@@ -1,10 +1,7 @@
 #!/usr/bin/python3 
 
 import ipaddress
-from lib2to3.pgen2 import token
-from os import confstr
 from xmlrpc.client import boolean
-import json
 import requests
 import urllib3
 import sys
