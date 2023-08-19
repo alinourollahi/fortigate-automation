@@ -63,23 +63,21 @@ def update_malicious_IP_object_group_in_FG(fw_info, names):
     headers = {
         'Authorization': 'Bearer '+ fw_info["token"] 
     }
-
     response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Getting Malicious_IPs group_object from FG")
     address = response.json()
 
-    address = address["results"][0]
-    members = address['member']
+    members = address["results"][0]["member"]
     
     for name in names:
         c = True
         for member in members:
-            if member["name"] == name:
+            if member["name"] == name["value"]:
                 c = False
                 break
         if c:
             member = {
-                "name": name
+                "name": name["value"]
             }
             members.append(member)
     payload = {
@@ -163,7 +161,7 @@ def main():
         "token": token
     }
 
-    counter_of_inputs = input("Enter number of Input (IP addresses or FQDNs):\n")
+    counter_of_inputs = input("Enter number of Inputs (IP addresses or FQDNs):\n")
 
     try:
         counter_of_inputs = int(counter_of_inputs)
@@ -184,7 +182,6 @@ def main():
             inputs.append({"type": "fqdn", "value": IP_or_FQDN})
 
 
-    print(inputs)
     add_malicious_objects_to_FG(fw_info, inputs)
    
     update_malicious_IP_object_group_in_FG(fw_info, inputs)
