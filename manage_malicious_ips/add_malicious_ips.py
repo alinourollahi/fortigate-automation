@@ -142,8 +142,6 @@ def add_malicious_objects_to_FG(fw_info, names):
             payload+='{"name": "%s", "type": "fqdn", "fqdn": "%s"},' % (name["value"], name["value"])
     payload += ']'
 
-    print(fg_url)
-    print(payload)
     response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Adding address objects to FG")
     print("Objects added!")
