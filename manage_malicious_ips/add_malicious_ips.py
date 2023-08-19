@@ -6,6 +6,7 @@ import requests
 import urllib3
 import ipaddress 
 import sys
+import re
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -14,8 +15,19 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def is_ip_address_valid(address):
     try:
         ip = ipaddress.ip_address(address)
+        return True
     except ValueError:
-        print("IP address '{}' is not valid!".format(address)) 
+        is_fqdn_valid(address)
+
+def is_fqdn_valid(fqdn):
+    # Define a regular expression pattern for FQDN validation
+    fqdn_pattern = r"^(?=.{1,255}$)([a-zA-Z0-9_][a-zA-Z0-9_-]*\.)*[a-zA-Z0-9_][a-zA-Z0-9_-]*\.[a-zA-Z]{2,}$"
+
+    # Use the re.match function to check if the input matches the pattern
+    if re.match(fqdn_pattern, fqdn):
+        return False
+    else:
+        print("{} is not a valid IP or FQDN!".format(fqdn))
         sys.exit(-1)
 
 # End of validation function
@@ -84,7 +96,7 @@ def update_malicious_IP_object_group_in_FG(fw_info, names):
 # Post objects to Fortigate
 # This function posts one or more objects to Fortigate
 # Output: this function return nothing
-def add_malicious_IP_objects_to_FG(fw_info, names):
+def add_malicious_objects_to_FG(fw_info, names):
     fg_url = "https://%s/api/v2/cmdb/firewall/address?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'] ,fw_info['vdom'])
 
     payload={}
@@ -101,7 +113,7 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
     old_names = []
     for i in range(len(names)):
         for address in addresses:
-            if address["name"] == names[i]:
+            if address["name"] == names[i]["value"]:
                 old_names.append(names[i])
                 break
     new_names = []
@@ -111,7 +123,7 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
 
     for i in range(len(names)):
         for j in range(len(old_names)):
-            if names[i] == old_names[j]:
+            if names[i]["value"] == old_names[j]["value"]:
                 break;
             if(j == len(old_names)-1):
                 new_names.append(names[i])
@@ -126,9 +138,14 @@ def add_malicious_IP_objects_to_FG(fw_info, names):
 
     payload = "["
     for name in new_names:
-        payload+='{"name":"%s","subnet":"%s"},' % (name, name)   
+        if name["type"] == "ip":
+            payload+='{"name": "%s", "subnet": "%s"},' % (name["value"], name["value"])   
+        else: 
+            payload+='{"name": "%s", "type": "fqdn", "fqdn": "%s"},' % (name["value"], name["value"])
     payload += ']'
 
+    print(fg_url)
+    print(payload)
     response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Adding address objects to FG")
     print("Objects added!")
@@ -146,24 +163,31 @@ def main():
         "token": token
     }
 
-    counter_of_ip_addresses = int(input("Enter number of IP addresses\n"))
-    ip_addresses = []
-    for i in range(counter_of_ip_addresses):
-        ip_addresses.append(input())
+    counter_of_inputs = input("Enter number of Input (IP addresses or FQDNs):\n")
 
-    IPs = []
-    for ip in ip_addresses:
-        if ip.__contains__("/"):
-            print("Enter IP without mask. Example: 8.8.8.8")
-            return -1
-        is_ip_address_valid(ip)
-        ip = ip + '/32'
-        IPs.append(ip)
+    try:
+        counter_of_inputs = int(counter_of_inputs)
+    except ValueError:
+        print("Please Enter number!")
+        sys.exit(-1)
 
-    add_malicious_IP_objects_to_FG(fw_info, IPs)
+    inputs = []
+    is_input_IP_address = False
+
+    for i in range(counter_of_inputs):
+        IP_or_FQDN = input()
+        is_input_IP_address = is_ip_address_valid(IP_or_FQDN)
+        if is_input_IP_address:
+            IP_or_FQDN = IP_or_FQDN + '/32'
+            inputs.append({"type": "ip", "value": IP_or_FQDN})
+        else:
+            inputs.append({"type": "fqdn", "value": IP_or_FQDN})
+
+
+    print(inputs)
+    add_malicious_objects_to_FG(fw_info, inputs)
    
-    update_malicious_IP_object_group_in_FG(fw_info, IPs)
-    return
+    update_malicious_IP_object_group_in_FG(fw_info, inputs)
 
 
 if __name__ == "__main__":
