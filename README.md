@@ -1,4 +1,4 @@
-# Fortigate-Automation
+# Fortigate Automation
 
 This repository contains scripts for automating repetitive tasks on Fortigate firewalls. Each directory contains scripts for different goals. All scripts have been tested on FortiOS 7+.
 
