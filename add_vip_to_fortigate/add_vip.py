@@ -187,3 +187,15 @@ def get_addresses_from_FG(fw_info):
     address = response.json()
     
     return address
+
+# Post an address object to fortigate
+# Output: This function returns nothing
+def post_address_to_FG(fw_info, name, ip):
+    fg_url = "https://%s/api/v2/cmdb/firewall/address?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+    payload='{"name":"%s","subnet":"%s/32"}' % (name, ip)
+    print("Adding: " + name)    
+    response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Posting address to FG")
