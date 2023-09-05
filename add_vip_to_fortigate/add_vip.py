@@ -94,3 +94,78 @@ def get_zone(fw_info, intf):
                 return z["name"]
 
     return -1
+
+
+
+# Post a VIP to Fortigate
+# This function posts one VIP or multiple VIPs (based on port_forward value) and then add a VIP_GRP.
+# Output: This function returns nothing
+def post_vip_to_FG(fw_info, name, publish_ip, local_ip, port_forward, ports):
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"]
+    }   
+    url = "https://%s/api/v2/cmdb/firewall/vip?with_meta=1&datasource=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+
+    members = []
+    if(port_forward == 'True'):
+        for port in ports:
+            vip_name = name + '-Port' + port["number"]
+     
+            if port["protocol"] == 'udp':
+                vip_name += '(udp)'
+            payload= {
+                "name": vip_name,
+                "extip": publish_ip,
+                "mappedip":[{"range": '%s' %(local_ip)}],
+                "extintf":{"name":"any","q_origin_key":"any","interface-name":"any"},
+                "portforward": "enable",
+                "protocol": port["protocol"],
+                "extport": port["number"],
+                "mappedport": port["number"],
+            }
+            payload = json.dumps(payload)
+
+            response = requests.request("POST", url, headers=headers, data=payload, verify=False)
+            handle_error(response, "Posting VIP to FG")
+
+            print("VIP for port " + str(port["number"]) + "/" + str(port["protocol"]) + " added")
+            
+            members.append({"name": vip_name})
+
+    else:
+        vip_name = name + '-Full_Port'
+        payload= {
+            "name": vip_name,
+            "extip": publish_ip,
+            "mappedip":[{"range": '%s' %(local_ip)}],
+            "extintf":{"name":"any","q_origin_key":"any","interface-name":"any"},
+            "portforward": "disable",
+        }
+
+        payload = json.dumps(payload)
+
+        response = requests.request("POST", url, headers=headers, data=payload, verify=False)
+        handle_error(response, "Posting VIP to FG")
+        print("VIP '{}' Added".format(vip_name))
+        members.append({"name": vip_name})
+        
+
+    # Posting VIPGRP
+    url_vipgrp = "https://%s/api/v2/cmdb/firewall/vipgrp?skip=1&vdom=%s&datasource=1" %(fw_info['url'], fw_info['vdom'])
+
+    payload = {
+        "name": name + " - VIPGRP",
+        "interface": {
+            "q_origin_key": "any",
+            "name": "any",
+            "datasource": "system.interface"
+        },
+        "color": 0,
+        "comments": "",
+        "member": members
+    }
+    
+    payload = json.dumps(payload)
+    response = requests.request("POST", url_vipgrp, headers=headers, data=payload, verify=False)
+    handle_error(response, "Posting VIPGRP to FG")
+    print("VIPGRP for " + str(publish_ip) + " added")
