@@ -70,7 +70,6 @@ def get_dst_interface(fw_info, ip):
     return routes["interface"]
 
 
-
 # Get the zone of the giving interface
 # This function searchs in zones to find the zone of the giving interface
 # Output: Zone of the giving interface
@@ -188,6 +187,7 @@ def get_addresses_from_FG(fw_info):
     
     return address
 
+
 # Post an address object to fortigate
 # Output: This function returns nothing
 def post_address_to_FG(fw_info, name, ip):
@@ -199,3 +199,37 @@ def post_address_to_FG(fw_info, name, ip):
     print("Adding: " + name)    
     response = requests.request("POST", fg_url, headers=headers, data=payload, verify=False)
     handle_error(response, "Posting address to FG")
+
+
+# Get services from Fortigate
+# This function returns all service objects from fortigate
+# Output: An array of service objects
+def get_services_from_FG(fw_info):
+    url_service = "https://%s/api/v2/cmdb/firewall.service/custom?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"]
+    } 
+
+    payload = {}
+
+    response = requests.request("GET", url_service, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting services from FG")
+    fg_services = response.json()["results"]
+    services = []
+
+    for s in fg_services:
+        if 'tcp-portrange' in s and 'udp-portrange' in s :
+            tcp = s['tcp-portrange']
+            udp = s['udp-portrange']
+            name = s['name']
+            if " " in s['tcp-portrange'] or " " in s['udp-portrange'] or ":" in s['tcp-portrange'] or ":" in s['udp-portrange'] or "-" in s['tcp-portrange'] or "-" in s['udp-portrange']: continue
+            if len(s['tcp-portrange']) == 0 : tcp = '0'
+            if len(s['udp-portrange']) == 0 : udp = '0'
+            service = {
+                'name': name,
+                'tcp': tcp, 
+                'udp': udp
+            }
+            services.append(service)
+    return services
