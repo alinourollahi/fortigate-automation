@@ -169,3 +169,21 @@ def post_vip_to_FG(fw_info, name, publish_ip, local_ip, port_forward, ports):
     response = requests.request("POST", url_vipgrp, headers=headers, data=payload, verify=False)
     handle_error(response, "Posting VIPGRP to FG")
     print("VIPGRP for " + str(publish_ip) + " added")
+
+
+# Get addresses from Fortigate
+# This function returns all address objects from fortigate
+# Output: An array of address objects
+def get_addresses_from_FG(fw_info):
+    fg_url = "https://%s/api/v2/cmdb/firewall/address?with_meta=1&datasource=1&skip=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response,"Getting all addresses from FG")
+    address = response.json()
+    
+    return address
