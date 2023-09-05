@@ -233,3 +233,41 @@ def get_services_from_FG(fw_info):
             }
             services.append(service)
     return services
+
+
+# Post one or multiple services to fortigate
+# Output: An array of services names
+def post_services_to_FG(fw_info, ports):
+    services = get_services_from_FG(fw_info)
+    policy_services = []
+
+    payload = ""
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"]
+    } 
+
+
+    for p in ports:
+        if p["protocol"] == "tcp":
+          res = next((item for item in services if item["tcp"] == p["number"]), None)
+          if res is not None:
+              policy_services.append({"name": res['name']})
+          else:
+              payload = '{"name":"%s","tcp-portrange":"%s"}'% (p["number"],p["number"])
+              service_url = "https://%s/api/v2/cmdb/firewall.service/custom?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+              response = requests.request("POST", service_url, headers=headers, data=payload, verify=False)
+              handle_error(response, "Posting a service")
+              policy_services.append({"name": p["number"]})
+        else:
+          res = next((item for item in services if item["udp"] == p["number"]), None)
+          if res is not None:
+              policy_services.append({"name": res['name']})
+          else:
+              payload = '{"name":"%s","udp-portrange":"%s"}'% (p["number"],p["number"])
+              service_url = "https://%s/api/v2/cmdb/firewall.service/custom?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+              response = requests.request("POST", service_url, headers=headers, data=payload, verify=False)
+              handle_error(response, "Posting a service")
+              policy_services.append({"name": p["number"]})
+
+    return policy_services
