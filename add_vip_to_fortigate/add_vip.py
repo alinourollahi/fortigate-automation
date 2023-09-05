@@ -271,3 +271,39 @@ def post_services_to_FG(fw_info, ports):
               policy_services.append({"name": p["number"]})
 
     return policy_services
+
+
+# Post a policy to fortigate for VIP_GRP
+# Output: This function returns nothing
+def post_policy_to_FG(fw_info, name, wan_zone, dst_zone, port_forward, ports):
+    url_policy = "https://%s/api/v2/cmdb/firewall/policy?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"]
+    } 
+
+    policy_services =[{'name':'ALL'}]
+
+    if(port_forward=='True'):
+        policy_services = post_services_to_FG(fw_info, ports)
+
+    nat = 'disable'
+
+    payload = {
+        "status": "enable",
+        "name": "Publish " + name,
+        "srcintf": [{"name": wan_zone}],
+        "dstintf": [{"name": dst_zone}],
+        "srcaddr":[{"name": "all"}],
+        "dstaddr":[{"name": name + " - VIPGRP"}],
+        "action":"accept",
+        "schedule": {"q_origin_key": "always"},
+        "service": policy_services,
+        "nat": nat
+    }
+
+    payload = json.dumps(payload)
+    response = requests.request("POST", url_policy, headers=headers, data=payload, verify=False)
+    handle_error(response, "Posting a policy")
+    print("Policy added for " + name)
+
