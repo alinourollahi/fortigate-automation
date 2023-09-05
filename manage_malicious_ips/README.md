@@ -17,16 +17,29 @@ Before using the script, make sure you have the following prerequisites in place
 
 ## Usage
 
-Execute one of the scripts with the following command:   
-
+For adding objects to the "Malicious_IPs" group, use the following command:  
 ```bash
 python3 add_malicious_ips.py
 ```
-or
+The script will prompt you for the following inputs:
+1. fortigate_url: URL of your Fortigate device.
+2. fortigate_vdom: Virtual Domain (VDOM) on Fortigate.
+3. fortigate_token: API token for Fortigate authentication.
+4. input_count: number of IPs or FQDNs you want to add.
+5. Input: The IPs or FQDNs you want to add to the "malicious_IPs" object group.
+
+For deleting an object from the "Malicious_IPs" group, use the following command:  
 ```bash
-python3 delete_malicious_ips.py
+python3 del_malicious_ips.py
 ```
-or 
+The script will prompt you for the following inputs:
+1. fortigate_url: URL of your Fortigate device.
+2. fortigate_vdom: Virtual Domain (VDOM) on Fortigate.
+3. fortigate_token: API token for Fortigate authentication.
+4. Input: The IP or FQDN you want to delete from the "malicious_IPs" object group.
+
+
+For getting objects of the "Malicious_IPs" group, use the following command:   
 ```bash
 python3 get_malicious_ips.py
 ```
@@ -34,4 +47,3 @@ The script will prompt you for the following inputs:
 1. fortigate_url: URL of your Fortigate device.
 2. fortigate_vdom: Virtual Domain (VDOM) on Fortigate.
 3. fortigate_token: API token for Fortigate authentication.
-4. ip: The IP that you want to add or delete from the "malicious_IPs" object group. (Only for add or delete script)
