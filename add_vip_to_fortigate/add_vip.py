@@ -112,7 +112,7 @@ def post_vip_to_FG(fw_info, name, publish_ip, local_ip, port_forward, ports):
             vip_name = name + '-Port' + port["number"]
      
             if port["protocol"] == 'udp':
-                vip_name += '(udp)'
+                vip_name += 'udp'
             payload= {
                 "name": vip_name,
                 "extip": publish_ip,
