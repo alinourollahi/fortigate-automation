@@ -68,3 +68,29 @@ def get_dst_interface(fw_info, ip):
     routes = response.json()['results']
     
     return routes["interface"]
+
+
+
+# Get the zone of the giving interface
+# This function searchs in zones to find the zone of the giving interface
+# Output: Zone of the giving interface
+def get_zone(fw_info, intf):
+    fg_url = "https://%s/api/v2/cmdb/system/zone?datasource=1&with_meta=1&vdom=%s" %(fw_info['url'], fw_info['vdom'])
+    
+    headers = {
+        'Authorization': 'Bearer '+ fw_info["token"] 
+    }
+
+    payload = {}
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting zone of interface from FG")
+
+    zones = response.json()["results"]
+
+    for z in zones:
+        interfaces = z["interface"]
+        for i in interfaces:
+            if i["interface-name"] == intf:
+                return z["name"]
+
+    return -1
