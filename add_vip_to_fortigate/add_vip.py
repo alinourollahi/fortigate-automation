@@ -49,3 +49,22 @@ def handle_error(response , comment):
             print(response['cli_error'])
         sys.exit(-1)
     
+    
+# Get destination interface based on IP
+# This function searchs for the giving IP in routing monitor to find the outgoing interface
+# Output: Destination interface
+def get_dst_interface(fw_info, ip):
+
+    fg_url = "https://%s/api/v2/monitor/router/lookup?destination=%s&vdom=%s" %(fw_info['url'],ip ,fw_info['vdom'])
+    myToken = fw_info['token']
+    payload={}
+
+    headers = {
+        'Authorization': 'Bearer '+ myToken 
+    }
+    response = requests.request("GET", fg_url, headers=headers, data=payload, verify=False)
+    handle_error(response, "Getting destination interface from FG")
+
+    routes = response.json()['results']
+    
+    return routes["interface"]
