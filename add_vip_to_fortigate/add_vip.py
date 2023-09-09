@@ -307,3 +307,69 @@ def post_policy_to_FG(fw_info, name, wan_zone, dst_zone, port_forward, ports):
     handle_error(response, "Posting a policy")
     print("Policy added for " + name)
 
+
+def main():
+    url = input("Enter URL\n")
+    vdom = input("Enter VDOM\n")
+    fg_token = input("Enter FG_Token\n")
+    name = input("Enter name of the VM\n")
+    local_ip = input("Enter IP of VM\n")
+    publish_ip = input("Enter Publish IP\n")
+    port_forward = input("Enter port_forward status: (True/False)\n")
+    ports =[]
+ 
+    is_ip_address_valid(local_ip)
+
+    if port_forward == 'True':
+        try:
+            tcp_ports_count = int(input("Enter number of TCP ports\n"))
+        except ValueError:
+            print("Enter a number!")
+            sys.exit(-1)
+        
+        for tport in range(tcp_ports_count):
+            port = input("Enter TCP port number\n")
+            is_port_valid(port)
+            Port = {
+                "number": port,
+                "protocol": 'tcp'
+            }
+            ports.append(Port)
+
+        try:
+            udp_ports_count = int(input("Enter number of UDP ports\n"))
+        except ValueError:
+            print("Enter a number!")
+            sys.exit(-1)
+        for uport in range(udp_ports_count):
+            port = input("Enter UDP port number\n")
+            is_port_valid(port)
+            Port = {
+                "number": port,
+                "protocol": 'udp'
+            }
+            ports.append(Port)
+            
+    fw_info = {
+        "url": url,
+        "vdom": vdom,
+        "token": fg_token
+    }
+
+    dst_interface = get_dst_interface(fw_info, local_ip)
+
+    dst_zone = get_zone(fw_info, dst_interface)
+    if(dst_zone == -1):
+        dst_zone = dst_interface
+
+    wan_interface = get_dst_interface(fw_info, '8.8.8.8')
+    wan_zone = get_zone(fw_info, wan_interface)
+    if(wan_zone == -1):
+        wan_zone = wan_interface
+
+    post_vip_to_FG(fw_info, name, publish_ip, local_ip, port_forward, ports)
+
+    post_policy_to_FG(fw_info, name, wan_zone, dst_zone, port_forward, ports)
+
+if __name__ == "__main__":
+    main()
