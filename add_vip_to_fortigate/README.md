@@ -1,12 +1,12 @@
 # Add VIP to Fortigate
 
-This repository includes a script designed to simplify the process of configuring Virtual IP (VIP) settings on your Fortigate firewall. With this script, you can effortlessly create VIPs, organize them into VIP groups, and establish corresponding firewall policies.
+This repository includes a script designed to simplify the process of configuring Virtual IP (VIP) settings on your Fortigate firewall. With this script, you can effortlessly create VIPs, organize them into VIP groups, and add a corresponding firewall policy.
 
-The script streamlines the following tasks:
+The script does the following tasks:
 
 1. VIP Creation: Generate Virtual IPs that enable traffic redirection to specific local IP addresses.
 2. VIP Group Formation: Group VIPs together for efficient management and rule application.
-3. Firewall Policy Setup: Automatically generate firewall policies with the following attributes:
+3. Firewall Policy Setup: Generate a firewall policy with the following attributes:
    - Source: All sources.
    - Destination: VIP Group (The VIP group script was created)
    - Source Interface: WAN interface (automatically detected by the script, no manual input required).
