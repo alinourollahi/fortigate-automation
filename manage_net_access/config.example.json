@@ -1,0 +1,19 @@
+{
+  "firewall": {
+    "ip": "192.0.2.1",
+    "port": 443,
+    "api_key": "REPLACE_WITH_YOUR_API_KEY",
+    "vdom": "root"
+  },
+  "groups": {
+    "full": "FULL-ACCESS-SOURCES",
+    "limited_source": "LIMITED-ACCESS-SOURCES",
+    "limited_destination": "LIMITED-ACCESS-DESTINATIONS"
+  },
+  "allowed_source_networks": [
+    "192.168.0.0/24",
+    "192.168.1.0/24",
+    "192.168.2.0/24"
+  ],
+  "verify_tls": false
+}
