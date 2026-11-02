@@ -9,7 +9,7 @@ Before using the script, make sure you have the following prerequisites in place
 1. Install Python 3.10 or later. No external Python packages are required.
 2. Create a webfilter profile and link a static URL filter table to it.
 3. Apply the webfilter profile to the relevant firewall policies if you want its rules to affect traffic.
-4. Create a Fortigate user (REST API Admin) with read/write access to webfilter profiles and URL filter tables in the selected VDOM.
+4. Create a Fortigate user (REST API Admin) with read/write access to webfilter profiles in the selected VDOM.
 
 The script manages entries in an existing table. It does not create profiles, tables or firewall policies.
 
