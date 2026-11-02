@@ -5,6 +5,6 @@
     "api_key": "REPLACE_WITH_YOUR_API_KEY",
     "vdom": "root"
   },
-  "profile_name": "URL-WhiteList-DTN",
+  "profile_name": "REPLACE_WITH_YOUR_WEBFILTER_PROFILE_NAME",
   "verify_tls": true
 }
