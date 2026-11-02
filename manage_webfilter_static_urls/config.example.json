@@ -1,0 +1,10 @@
+{
+  "firewall": {
+    "ip": "192.0.2.1",
+    "port": 443,
+    "api_key": "REPLACE_WITH_YOUR_API_KEY",
+    "vdom": "root"
+  },
+  "profile_name": "URL-WhiteList-DTN",
+  "verify_tls": true
+}
